@@ -55,6 +55,7 @@ function ToDoNext({ lists }) {
 
   // Render the component
   return (
+  <><h2>To do next</h2>
     <div className="to-do-next">
       {/* Map over each of the closest tasks */}
       {closestTasks.map((task) => (
@@ -97,6 +98,7 @@ function ToDoNext({ lists }) {
         </Link>
       ))}
     </div>
+    </>
   );
 }
 
