@@ -1,5 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+:root {
+  --featured-task-font-family: "Poppins", Helvetica;
+  --featured-task-font-size: 16px;
+  --featured-task-font-style: normal;
+  --featured-task-font-weight: 600;
+  --featured-task-letter-spacing: 0px;
+  --featured-task-line-height: 140%;
+  --h1-font-family: "Poppins", Helvetica;
+  --h1-font-size: 24px;
+  --h1-font-style: normal;
+  --h1-font-weight: 700;
+  --h1-letter-spacing: 0px;
+  --h1-line-height: 120.00000476837158%;
+  --h2-font-family: "Poppins", Helvetica;
+  --h2-font-size: 20px;
+  --h2-font-style: normal;
+  --h2-font-weight: 600;
+  --h2-letter-spacing: 0px;
+  --h2-line-height: 139.9999976158142%;
+  --label-font-family: "Poppins", Helvetica;
+  --label-font-size: 10px;
+  --label-font-style: normal;
+  --label-font-weight: 400;
+  --label-letter-spacing: 0px;
+  --label-light-font-family: "Poppins", Helvetica;
+  --label-light-font-size: 10px;
+  --label-light-font-style: normal;
+  --label-light-font-weight: 400;
+  --label-light-letter-spacing: 0px;
+  --label-light-line-height: normal;
+  --label-line-height: normal;
+  --subtext-font-family: "Poppins", Helvetica;
+  --subtext-font-size: 10px;
+  --subtext-font-style: normal;
+  --subtext-font-weight: 300;
+  --subtext-letter-spacing: 0px;
+  --subtext-line-height: 139.9999976158142%;
+  --subtitle-font-family: "Poppins", Helvetica;
+  --subtitle-font-size: 16px;
+  --subtitle-font-style: normal;
+  --subtitle-font-weight: 400;
+  --subtitle-letter-spacing: 0px;
+  --subtitle-line-height: 139.9999976158142%;
+  --task-title-font-family: "Poppins", Helvetica;
+  --task-title-font-size: 14px;
+  --task-title-font-style: normal;
+  --task-title-font-weight: 500;
+  --task-title-letter-spacing: 0px;
+  --task-title-line-height: 139.9999976158142%;
+}
+
+
 body,
 html {
   margin: 20px;
@@ -163,6 +215,9 @@ li span {
   font-weight: 500;
   line-height: 140%; /* 19.6px */
   text-decoration: none;
+  width: 100%;
+  padding-right: 20px;
+  vertical-align: middle;
 }
 
 a:link,
@@ -188,3 +243,269 @@ a:visited {
   // border-radius: 10px;
   // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+.task-content {
+  transition: all 0.5s ease;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #C4C4C4;
+  border-radius: 2px;
+}
+
+.progress-bar-done {
+  height: 4px;
+  background-color: #006EE9;
+  border-radius: 2px;
+}
+
+.label-right {
+text-align: right;
+font-family: Poppins;
+font-size: 10px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+width: 100%;
+}
+
+.label-left {
+  text-align: left;
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  }
+
+.progressPadding {
+  padding-bottom: 20px;
+}
+
+.listProgressPadding {
+  padding-top: 5px;
+}
+
+.to-do-next {
+  display: flex;
+  width: 335px;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  width: 335px;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card-menu {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  position: relative;
+  // width: 161px;
+  width: 100%;
+}
+
+.card-menu .card-menu-background-wrapper {
+  background-color: #006ee9;
+  border-radius: 20px;
+  box-shadow: 0px 16px 20px #1c103e1a;
+  height: 188px;
+  overflow: hidden;
+  position: relative;
+  //width: 161px;
+  width: 100%;
+}
+
+.card-menu-background-past-deadline {
+  background-color: #e9002b;
+  border-radius: 20px;
+  box-shadow: 0px 16px 20px #1c103e1a;
+  height: 188px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+}
+
+.card-menu .card-menu-background {
+  height: 258px;
+  left: -15px;
+  position: relative;
+  top: 0px;
+  width: 261px;
+}
+
+.card-menu .ellipse {
+  height: 28px;
+  left: 65px;
+  position: absolute;
+  top: 0;
+  width: 28px;
+}
+
+.card-menu .img {
+  height: 28px;
+  left: 90px;
+  position: absolute;
+  top: 64px;
+  width: 28px;
+}
+
+.card-menu .ellipse-2 {
+  height: 123px;
+  left: 0;
+  position: absolute;
+  top: 135px;
+  width: 123px;
+}
+
+.card-menu .ellipse-3 {
+  height: 123px;
+  left: 138px;
+  position: absolute;
+  top: 34px;
+  width: 123px;
+}
+
+.card-menu .frame {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  left: 12px;
+  position: absolute;
+  top: 12px;
+  //width: 137px;
+  width: 100%;
+}
+
+.card-menu .card-menu-deadline-wrapper {
+  align-self: stretch;
+  height: 19px;
+  position: relative;
+  width: 100%;
+  gap: 10px;
+}
+
+.card-menu .card-menu-deadline {
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 10px;
+  display: inline-flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 2px 5px;
+  position: relative;
+}
+
+.card-menu .para-primary-center {
+  color: #444444;
+  font-family: var(--label-light-font-family);
+  font-size: var(--label-light-font-size);
+  font-style: var(--label-light-font-style);
+  font-weight: var(--label-light-font-weight);
+  letter-spacing: var(--label-light-letter-spacing);
+  line-height: var(--label-light-line-height);
+  margin-top: -1px;
+  position: relative;
+  text-align: right;
+  width: fit-content;
+  //width: 100%;
+}
+
+.card-menu .card-menu-title {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  height: 109px;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.card-menu .text-wrapper {
+  align-self: stretch;
+  color: #ffffff;
+  font-family: "Poppins-ExtraLight", Helvetica;
+  font-size: 10px;
+  font-weight: 200;
+  letter-spacing: 0;
+  line-height: 10px;
+  position: relative;
+}
+
+.card-menu .div {
+  align-self: stretch;
+  color: #ffffff;
+  font-family: var(--featured-task-font-family);
+  font-size: var(--featured-task-font-size);
+  font-style: var(--featured-task-font-style);
+  font-weight: var(--featured-task-font-weight);
+  letter-spacing: var(--featured-task-letter-spacing);
+  line-height: 0px;
+  position: relative;
+}
+
+.card-menu .card-menu-progress {
+  align-items: flex-start;
+  align-self: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 1px;
+  justify-content: flex-end;
+  position: relative;
+  width: 100%;
+}
+
+.card-menu .para-primary-center-2 {
+  align-self: stretch;
+  color: #ffffff;
+  font-family: var(--label-font-family);
+  font-size: var(--label-font-size);
+  font-style: var(--label-font-style);
+  font-weight: var(--label-font-weight);
+  letter-spacing: var(--label-letter-spacing);
+  line-height: var(--label-line-height);
+  margin-top: -1px;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.card-menu .rectangle-wrapper {
+  align-self: stretch;
+  background-color: #004796;
+  border-radius: 2px;
+  height: 4px;
+  position: relative;
+  width: 100%;
+}
+
+.card-menu .rectangle {
+  background-color: #ffffff;
+  border-radius: 2px;
+  height: 4px;
+  width: 108px;
+}
+
+.card-menu .para-primary-center-3 {
+  align-self: stretch;
+  color: #ffffff;
+  font-family: var(--label-light-font-family);
+  font-size: var(--label-light-font-size);
+  font-style: var(--label-light-font-style);
+  font-weight: var(--label-light-font-weight);
+  letter-spacing: var(--label-light-letter-spacing);
+  line-height: var(--label-light-line-height);
+  position: relative;
+  text-align: right;
+}
+
+

@@ -1,11 +1,35 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { database } from './firebase-config';
-import { ref, update } from 'firebase/database';
+import { ref, update, onValue } from 'firebase/database';
+import ProgressBar from './ProgressBar';
+import ListProgress from './ListProgress';
+
 
 const ListDisplay = ({ lists }) => {
   const [isEditing, setIsEditing] = useState(null);
   const [editedListName, setEditedListName] = useState('');
+  const [progressPercentages, setProgressPercentages] = useState({});
+
+
+  useEffect(() => {
+    lists.forEach((list) => {
+      const tasksRef = ref(database, `lists/${list.id}/tasks`);
+
+      onValue(tasksRef, (snapshot) => {
+        const data = snapshot.val();
+        const tasks = data ? Object.keys(data).map((key) => ({ id: key, ...data[key] })) : [];
+        const doneTasks = tasks.filter(task => task.done).length;
+        const totalTasks = tasks.length;
+        const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+
+        setProgressPercentages(prev => ({ ...prev, [list.id]: progress }));
+
+        const listRef = ref(database, `lists/${list.id}`);
+        update(listRef, { progress });
+      });
+    });
+  }, [lists]);
 
   const startEditing = (listId, currentName) => {
     setIsEditing(listId);
@@ -19,6 +43,8 @@ const ListDisplay = ({ lists }) => {
     setEditedListName('');
   };
 
+  const navigate = useNavigate();
+  
   return (
     <ul>
       {lists.map((list) => (
@@ -41,13 +67,16 @@ const ListDisplay = ({ lists }) => {
           ) : (
             <>
               <div className="taskLabel">
-                <Link to={`/list/${list.id}`}>{list.name}</Link>
+                <div><Link to={`/list/${list.id}`}>{list.name}</Link></div>
+                <div className='listProgressPadding'><ListProgress listId={list.id} /></div>
               </div>
               <div className="task-actions">
                 <button onClick={() => startEditing(list.id, list.name)}>
                   Edit
                 </button>
-                {'>'}
+                <button onClick={() => navigate(`/list/${list.id}`)}>
+                  {'>'}
+                </button>
               </div>
             </>
           )}
