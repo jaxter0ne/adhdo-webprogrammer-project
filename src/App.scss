@@ -74,7 +74,8 @@ h1 {
   font-size: 24px;
   font-style: normal;
   font-weight: 700;
-  line-height: 120%; /* 28.8px */
+  line-height: 120%;
+  /* 28.8px */
 }
 
 h2 {
@@ -82,7 +83,8 @@ h2 {
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  line-height: 140%; /* 28px */
+  line-height: 140%;
+  /* 28px */
 }
 
 main {
@@ -205,7 +207,8 @@ li span {
   font-size: 10px;
   font-style: normal;
   font-weight: 300;
-  line-height: 140%; /* 14px */
+  line-height: 140%;
+  /* 14px */
 }
 
 .taskLabel {
@@ -213,7 +216,8 @@ li span {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 140%; /* 19.6px */
+  line-height: 140%;
+  /* 19.6px */
   text-decoration: none;
   width: 100%;
   padding-right: 20px;
@@ -227,7 +231,8 @@ a:visited {
   font-size: 14px;
   font-style: normal;
   font-weight: 500;
-  line-height: 140%; /* 19.6px */
+  line-height: 140%;
+  /* 19.6px */
   text-decoration: none;
 }
 
@@ -262,13 +267,13 @@ a:visited {
 }
 
 .label-right {
-text-align: right;
-font-family: Poppins;
-font-size: 10px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-width: 100%;
+  text-align: right;
+  font-family: Poppins;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  width: 100%;
 }
 
 .label-left {
@@ -278,7 +283,7 @@ width: 100%;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  }
+}
 
 .progressPadding {
   padding-bottom: 20px;
@@ -290,23 +295,25 @@ width: 100%;
 
 .to-do-next {
   display: flex;
-  width: 335px;
+  width: 100%;
   align-items: flex-start;
   gap: 12px;
+  justify-content: space-between;
 }
 
 .card {
   display: flex;
-  width: 335px;
+  width: 100%;
   align-items: flex-start;
   gap: 12px;
 }
 
 .card-menu {
-  align-items: flex-start;
-  display: flex;
-  gap: 10px;
+  // align-items: flex-start;
+  // display: flex;
+  // gap: 10px;
   position: relative;
+  // min-width: 100%;
   // width: 161px;
   width: 100%;
 }
@@ -317,9 +324,9 @@ width: 100%;
   box-shadow: 0px 16px 20px #1c103e1a;
   height: 188px;
   overflow: hidden;
-  position: relative;
+  // position: relative;
   //width: 161px;
-  width: 100%;
+  // width: 100%;
 }
 
 .card-menu-background-past-deadline {
@@ -329,7 +336,7 @@ width: 100%;
   height: 188px;
   overflow: hidden;
   position: relative;
-  width: 100%;
+  // width: 100%;
 
 }
 
@@ -338,7 +345,7 @@ width: 100%;
   left: -15px;
   position: relative;
   top: 0px;
-  width: 261px;
+  // width: 100%;
 }
 
 .card-menu .ellipse {
@@ -357,22 +364,6 @@ width: 100%;
   width: 28px;
 }
 
-.card-menu .ellipse-2 {
-  height: 123px;
-  left: 0;
-  position: absolute;
-  top: 135px;
-  width: 123px;
-}
-
-.card-menu .ellipse-3 {
-  height: 123px;
-  left: 138px;
-  position: absolute;
-  top: 34px;
-  width: 123px;
-}
-
 .card-menu .frame {
   align-items: center;
   display: flex;
@@ -382,7 +373,7 @@ width: 100%;
   position: absolute;
   top: 12px;
   //width: 137px;
-  width: 100%;
+  width: 90%;
 }
 
 .card-menu .card-menu-deadline-wrapper {
@@ -390,7 +381,7 @@ width: 100%;
   height: 19px;
   position: relative;
   width: 100%;
-  gap: 10px;
+  // gap: 10px;
 }
 
 .card-menu .card-menu-deadline {
@@ -415,7 +406,7 @@ width: 100%;
   margin-top: -1px;
   position: relative;
   text-align: right;
-  width: fit-content;
+  // width: fit-content;
   //width: 100%;
 }
 
@@ -450,7 +441,7 @@ width: 100%;
   font-weight: var(--featured-task-font-weight);
   letter-spacing: var(--featured-task-letter-spacing);
   line-height: 0px;
-  position: relative;
+  // position: relative;
 }
 
 .card-menu .card-menu-progress {
@@ -462,7 +453,7 @@ width: 100%;
   gap: 1px;
   justify-content: flex-end;
   position: relative;
-  width: 100%;
+  // width: 100%;
 }
 
 .card-menu .para-primary-center-2 {
@@ -485,14 +476,14 @@ width: 100%;
   border-radius: 2px;
   height: 4px;
   position: relative;
-  width: 100%;
+  // width: 100%;
 }
 
 .card-menu .rectangle {
   background-color: #ffffff;
   border-radius: 2px;
   height: 4px;
-  width: 108px;
+  // width: 108px;
 }
 
 .card-menu .para-primary-center-3 {
@@ -507,5 +498,3 @@ width: 100%;
   position: relative;
   text-align: right;
 }
-
-
