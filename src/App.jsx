@@ -45,7 +45,7 @@ function App() {
           path="/"
           element={
             <>
-              <ListManager onListAdded={onListAdded} />
+               <ListManager onListAdded={onListAdded} lists={lists} />
               <ListsDisplay lists={lists} />
             </>
           }

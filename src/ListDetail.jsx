@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { database } from './firebase-config';
 import { ref, onValue, push, set, update, remove } from 'firebase/database';
 import EditListName from './EditListName'; // Import the new component
+import ProgressBar from './ProgressBar'; // Import the new component
+
 
 function ListDetail() {
   const { listId } = useParams();
@@ -35,11 +37,16 @@ function ListDetail() {
   }, [listId]);
 
   const addTask = () => {
+    let deadline = newTaskDeadline;
+    if (deadline && !deadline.includes('T')) {
+      deadline += 'T09:00';
+    }
+  
     const taskRef = ref(database, `lists/${listId}/tasks`);
     const newTaskRef = push(taskRef);
     set(newTaskRef, {
       name: newTask,
-      deadline: newTaskDeadline || null,
+      deadline: deadline || null,
       done: isTaskDone,
     });
     setNewTask('');
@@ -59,10 +66,15 @@ function ListDetail() {
   };
 
   const saveTask = (taskId) => {
+    let deadline = editedTaskDeadline;
+    if (deadline && !deadline.includes('T')) {
+      deadline += 'T09:00';
+    }
+  
     const taskRef = ref(database, `lists/${listId}/tasks/${taskId}`);
     update(taskRef, {
       name: editedTaskName,
-      deadline: editedTaskDeadline || null,
+      deadline: deadline || null,
     });
     setEditingTaskId(null);
     setEditedTaskName('');
@@ -74,70 +86,79 @@ function ListDetail() {
     remove(taskRef);
   };
 
+  const doneTasks = tasks.filter(task => task.done).length;
+  const totalTasks = tasks.length;
+  const progressPercentage = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+
+
   return (
     <div>
       <Link to={`/`}>{'<'} Back</Link>
-      <EditListName listName={listName} setListName={setListName} /> {/* Use the new component */}
-      <div className="newTask">
-        <input
-          className="fullInput"
-          type="text"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          placeholder="Add new task"
-        />
-        <input
-          className="fullInput"
-          type="date"
-          value={newTaskDeadline}
-          onChange={(e) => setNewTaskDeadline(e.target.value)}
-          placeholder="Deadline (optional)"
-        />
-        <button onClick={addTask} className="add">
-          + Add
-        </button>
+      <EditListName listName={listName} setListName={setListName} /> {/* Component to show list name and edit it when clicked */}
+      <span className='label-left'>Project Progress</span>
+      <div className='progressPadding'><ProgressBar progressPercentage={progressPercentage} /> {/* Use the ProgressBar component */}
       </div>
+      <div className="newTask">
+  <input
+    className="fullInput"
+    type="text"
+    value={newTask}
+    onChange={(e) => setNewTask(e.target.value)}
+    placeholder="Add new task"
+  />
+  <input
+    className="fullInput"
+    type="datetime-local"
+    value={newTaskDeadline}
+    onChange={(e) => setNewTaskDeadline(e.target.value)}
+    placeholder="Deadline (optional)"
+  />
+  <button onClick={addTask} className="add">
+    + Add
+  </button>
+</div>
       <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            {editingTaskId === task.id ? (
-              <>
-                <div className="task-content">
-                  <input
-                    className="fullInput"
-                    type="text"
-                    value={editedTaskName}
-                    onChange={(e) => setEditedTaskName(e.target.value)}
-                  />
-                  <input
-                    className="fullInput"
-                    type="date"
-                    value={editedTaskDeadline}
-                    onChange={(e) => setEditedTaskDeadline(e.target.value)}
-                  />
-                </div>
-                <div className="task-actions">
-                  <button onClick={() => saveTask(task.id)}>Save</button>
-                  <button onClick={() => setEditingTaskId(null)}>Cancel</button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="task-content">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={task.done}
-                      onChange={() => toggleTaskDone(task.id, !task.done)}
-                    />
-                  </label>
+      {tasks
+          .sort((a, b) => (a.done === b.done ? 0 : a.done ? 1 : -1))
+          .map((task) => (
+            <li key={task.id} className="task-content">
+              {editingTaskId === task.id ? (
+  <>
+  <div className="task-content">
+    <input
+      className="fullInput"
+      type="text"
+      value={editedTaskName}
+      onChange={(e) => setEditedTaskName(e.target.value)}
+    />
+    <input
+      className="fullInput"
+      type="datetime-local"
+      value={editedTaskDeadline}
+      onChange={(e) => setEditedTaskDeadline(e.target.value)}
+    />
+  </div>
+  <div className="task-actions">
+    <button onClick={() => saveTask(task.id)}>Save</button>
+    <button onClick={() => setEditingTaskId(null)}>Cancel</button>
+  </div>
+  </>
+              ) : (
+                <>
+                  <div className="task-content">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={task.done}
+                        onChange={() => toggleTaskDone(task.id, !task.done)}
+                      />
+                    </label>
                   <span onClick={() => startEditing(task)}>
                     {task.name}
                     <br />
                     {task.deadline && (
                       <span className="subDate">
-                        Deadline:{' '}
-                        {new Date(task.deadline).toLocaleDateString('en-GB')}
+                       Due {new Date(task.deadline).toLocaleDateString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' })} at {new Date(task.deadline).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     )}
                   </span>
