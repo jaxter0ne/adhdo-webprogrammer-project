@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { database } from './firebase-config';
-import { ref, update, onValue } from 'firebase/database';
+import { ref, update, onValue, remove } from 'firebase/database'; 
 import ProgressBar from './ProgressBar';
 import ListProgress from './ListProgress';
 
 
-const ListDisplay = ({ lists }) => {
+const ListDisplay = ({ lists, onDeleteList }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(null);
   const [editedListName, setEditedListName] = useState('');
   const [progressPercentages, setProgressPercentages] = useState({});
-
+  const deleteList = (listId) => {
+    onDeleteList(listId);
+  };
 
   useEffect(() => {
+    setIsLoading(true); // Set loading to true at the start of data fetch
+
     lists.forEach((list) => {
       const tasksRef = ref(database, `lists/${list.id}/tasks`);
 
@@ -27,6 +32,8 @@ const ListDisplay = ({ lists }) => {
 
         const listRef = ref(database, `lists/${list.id}`);
         update(listRef, { progress });
+
+        setIsLoading(false); // Set loading to false after data has been processed
       });
     });
   }, [lists]);
@@ -45,6 +52,10 @@ const ListDisplay = ({ lists }) => {
 
   const navigate = useNavigate();
   
+  if (isLoading) {
+    return <div>Loading...</div>; // Render loading message if data is being fetched
+  }
+
   return (
     <ul>
       {lists.map((list) => (
@@ -62,14 +73,19 @@ const ListDisplay = ({ lists }) => {
               <div className="task-actions">
                 <button onClick={() => saveListName(list.id)}>Save</button>
                 <button onClick={() => setIsEditing(null)}>Cancel</button>
+                <button onClick={() => deleteList(list.id)}>Delete</button> {/* Add delete button */}
               </div>
             </>
           ) : (
             <>
-              <div className="taskLabel">
-                <div><Link to={`/list/${list.id}`}>{list.name}</Link></div>
+              
+                <div className="taskLabel">
+                <Link to={`/list/${list.id}`}>
+                <div>{list.name}</div>
                 <div className='listProgressPadding'><ListProgress listId={list.id} /></div>
+                </Link>
               </div>
+            
               <div className="task-actions">
                 <button onClick={() => startEditing(list.id, list.name)}>
                   Edit

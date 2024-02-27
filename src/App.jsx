@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { database } from './firebase-config';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, remove } from 'firebase/database';
 import { Routes, Route, useParams } from 'react-router-dom';
 import ListManager from './ListManager';
 import ListDetail from './ListDetail';
@@ -30,6 +30,22 @@ function App() {
     fetchLists(); // Re-fetch lists to update UI after a new list is added
   };
 
+  const deleteList = (listId) => {
+    if (window.confirm('Are you sure you want to delete this list?')) {
+      const listRef = ref(database, `lists/${listId}`);
+      const tasksRef = ref(database, `lists/${listId}/tasks`);
+  
+      remove(listRef)
+        .then(() => remove(tasksRef))
+        .then(() => {
+          setLists(lists.filter(list => list.id !== listId));
+        })
+        .catch((error) => {
+          console.error('Error deleting list:', error);
+        });
+    }
+  };
+
   function ListDetailWrapper() {
     const { listId } = useParams();
     const list = lists.find(list => list.id === listId);
@@ -45,8 +61,8 @@ function App() {
           path="/"
           element={
             <>
-               <ListManager onListAdded={onListAdded} lists={lists} />
-              <ListsDisplay lists={lists} />
+              <ListManager onListAdded={onListAdded} lists={lists} />
+              <ListsDisplay lists={lists} onDeleteList={deleteList} />
             </>
           }
         />
