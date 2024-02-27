@@ -81,8 +81,7 @@ function ToDoNext({ lists }) {
               <div className="card-menu-title">
                 {/* Display the name of the list and the task */}
                 <div className="text-wrapper">{task.listName}</div>
-                <p className="div">{task.name}</p>
-              </div>
+                <p className="div">{task.name.length > 25 ? task.name.substring(0, 25) + '...' : task.name}</p>              </div>
               <div className="card-menu-progress">
                 <div className="para-primary-center-2">Project Progress</div>
                 {/* Display the progress of the list. If it's past deadline, style the background of the bar to be red */}

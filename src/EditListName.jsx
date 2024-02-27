@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { database } from './firebase-config';
-import { ref, onValue, update } from 'firebase/database';
+import { ref, onValue, update, remove } from 'firebase/database';
 
 function EditListName({ listName, setListName }) {
   const { listId } = useParams();
   const [editingList, setEditingList] = useState(false);
   const [originalListName, setOriginalListName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const listRef = ref(database, `lists/${listId}`);
@@ -32,6 +33,18 @@ function EditListName({ listName, setListName }) {
     setEditingList(false);
   };
 
+  const deleteList = () => {
+    if (window.confirm('Are you sure you want to delete this list?')) {
+      const listRef = ref(database, `lists/${listId}`);
+      const tasksRef = ref(database, `tasks/${listId}`);
+  
+      remove(listRef);
+      remove(tasksRef);
+  
+      navigate('/');
+    }
+  };
+
   return (
     <div className="titleBar">
       {editingList ? (
@@ -47,6 +60,7 @@ function EditListName({ listName, setListName }) {
           <div className='task-actions'>
             <button type="submit">Save</button>
             <button type="button" onClick={cancelEditingList}>Cancel</button>
+            <button type="button" onClick={deleteList}>Delete List</button>
           </div>  
         </form>
       ) : (
