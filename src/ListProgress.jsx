@@ -6,19 +6,31 @@ import ProgressBar from './ProgressBar';
 const ListProgress = ({ listId, progressBarColor, progressBarDoneColor, labelColor }) => {
     const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    const tasksRef = ref(database, `lists/${listId}/tasks`);
-
-    onValue(tasksRef, (snapshot) => {
-      const data = snapshot.val();
-      const tasks = data ? Object.keys(data).map((key) => ({ id: key, ...data[key] })) : [];
-      const doneTasks = tasks.filter(task => task.done).length;
-      const totalTasks = tasks.length;
-      const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
-
-      setProgress(progress);
-    });
-  }, [listId]);
+    useEffect(() => {
+      const listRef = ref(database, `lists/${listId}`);
+    
+      onValue(listRef, (snapshot) => {
+        const list = snapshot.val();
+    
+        if (list && list.name) {
+          const tasksRef = ref(database, `lists/${listId}/tasks`);
+    
+          onValue(tasksRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+              const tasks = Object.keys(data).map((key) => ({ id: key, ...data[key] }));
+              if (tasks.length > 0) {
+                const doneTasks = tasks.filter(task => task.done).length;
+                const totalTasks = tasks.length;
+                const progress = (doneTasks / totalTasks) * 100;
+    
+                setProgress(progress);
+              }
+            }
+          });
+        }
+      });
+    }, [listId]);
 
   return (
     <ProgressBar 

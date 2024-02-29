@@ -60,6 +60,10 @@ html {
     'Helvetica Neue', Arial, sans-serif;
 }
 
+div {
+  display: block;
+}
+
 form {
   display: flex;
   width: 100%;
@@ -84,6 +88,7 @@ h2 {
   font-style: normal;
   font-weight: 600;
   line-height: 140%;
+  color: #007bff;
   /* 28px */
 }
 
@@ -190,10 +195,11 @@ li span {
   align-items: center;
   vertical-align: middle;
   justify-content: space-between;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
   padding: 10px;
   background-color: #006ee9;
   border-radius: 10px;
+  order: -1;
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -207,7 +213,7 @@ li span {
   font-size: 10px;
   font-style: normal;
   font-weight: 300;
-  line-height: 140%;
+  line-height: 1px;
   /* 14px */
 }
 
@@ -242,6 +248,19 @@ a:visited {
   vertical-align: middle;
   justify-content: space-between;
   margin-bottom: 10px;
+  padding: 5px;
+  // border: 1px solid #006ee9;
+  // background-color: #ffffff;
+  // border-radius: 10px;
+  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.titleProgress {
+  // display: flex;
+  // align-items: center;
+  // vertical-align: middle;
+  justify-content: space-between;
+  //margin-bottom: 10px;
   padding: 5px;
   // border: 1px solid #006ee9;
   // background-color: #ffffff;
@@ -296,26 +315,26 @@ a:visited {
 .to-do-next {
   display: flex;
   width: 100%;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 12px;
-  justify-content: space-between;
+  //justify-content: space-between;
 }
 
 .card {
   display: flex;
   width: 100%;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 12px;
 }
 
 .card-menu {
-  // align-items: flex-start;
-  // display: flex;
+  align-items: stretch;
+  display: flex;
   // gap: 10px;
   position: relative;
   // min-width: 100%;
   // width: 161px;
-  width: 100%;
+  // width: 100%;
 }
 
 .card-menu .card-menu-background-wrapper {
@@ -343,17 +362,9 @@ a:visited {
 .card-menu .card-menu-background {
   height: 258px;
   left: -15px;
-  position: relative;
+  //position: relative;
   top: 0px;
-  // width: 100%;
-}
-
-.card-menu .ellipse {
-  height: 28px;
-  left: 65px;
-  position: absolute;
-  top: 0;
-  width: 28px;
+  width: 100%;
 }
 
 .card-menu .img {
@@ -365,15 +376,15 @@ a:visited {
 }
 
 .card-menu .frame {
-  align-items: center;
+  align-items: stretch;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  //justify-content: center;
   left: 12px;
   position: absolute;
   top: 12px;
   //width: 137px;
-  width: 90%;
+  width: 83%;
 }
 
 .card-menu .card-menu-deadline-wrapper {
@@ -385,7 +396,7 @@ a:visited {
 }
 
 .card-menu .card-menu-deadline {
-  align-items: center;
+  align-items: stretch;
   background-color: #ffffff;
   border-radius: 10px;
   display: inline-flex;
@@ -411,14 +422,16 @@ a:visited {
 }
 
 .card-menu .card-menu-title {
-  align-items: flex-start;
+  align-items: stretch;
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  height: 109px;
+  height: 110px;
   justify-content: center;
   position: relative;
   width: 100%;
+  margin-top: 5px;
+  vertical-align: middle;
 }
 
 .card-menu .text-wrapper {
@@ -428,7 +441,7 @@ a:visited {
   font-size: 10px;
   font-weight: 200;
   letter-spacing: 0;
-  line-height: 0px;
+  //line-height: 0px;
   position: relative;
 }
 
@@ -440,6 +453,7 @@ a:visited {
   font-style: var(--featured-task-font-style);
   font-weight: var(--featured-task-font-weight);
   letter-spacing: var(--featured-task-letter-spacing);
+  margin-top: 0px;
   //line-height: 14px;
   // position: relative;
 }
@@ -497,4 +511,36 @@ a:visited {
   line-height: var(--label-light-line-height);
   position: relative;
   text-align: right;
+}
+
+.roundPlusButton {
+  border: none;
+  color: white;
+  background-color: #006ee9;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  text-align: center;
+  vertical-align: middle;
+  line-height:20px;
+  margin: 15px;
+}
+
+.floatingButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100; /* Ensure it floats above other elements */
+}
+
+.taskContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.delete {
+  background-color: #e9002b;
+  border-color: #e9002b;
 }
