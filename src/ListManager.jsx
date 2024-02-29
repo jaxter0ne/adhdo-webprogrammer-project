@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // import useContext
 import { getDatabase, ref, push, set, remove, onValue } from 'firebase/database';
 import OpenAI from "openai";
 import { useNavigate } from 'react-router-dom';
+import UserContext from './UserContext'; // import UserContext
 
 const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 const openai = new OpenAI({
@@ -11,6 +12,7 @@ const openai = new OpenAI({
 });
 
 function ListManager({ onListAdded }) {
+  const user = useContext(UserContext); // access user from context
   const [listName, setListName] = useState('');
   const [lists, setLists] = useState([]);
   const navigate = useNavigate();
@@ -34,9 +36,8 @@ function ListManager({ onListAdded }) {
     const database = getDatabase();
     const listRef = ref(database, 'lists');
     const newListRef = push(listRef);
-    set(newListRef, { name: listName, tasks: {} });
-    setListName('');
-  
+    set(newListRef, { name: listName, tasks: {}, userId: user.uid }); // save user ID with the list
+
     try {
       const completion = await openai.chat.completions.create({
         messages: [{ role: "system", content: `Give me a JSON that divides the project "${listName}" into smaller tasks, and evaluate the duration in milliseconds (called "duration" and only contains a number) of each task.` }],

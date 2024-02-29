@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { database } from './firebase-config';
 import { ref, onValue, remove } from 'firebase/database';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useParams, useNavigate, Navigate } from 'react-router-dom';
 import ListManager from './ListManager';
 import ListDetail from './ListDetail';
 import TaskDetail from './TaskDetail';
@@ -9,9 +10,20 @@ import ListsDisplay from './ListsDisplay';
 import './App.scss';
 import ToDoNext from './ToDoNext';
 import { deleteListButton } from './DeleteListButton';
+import LoginPage from './LoginPage';
+import UserContext from './UserContext'; // import UserContext
 
 function App() {
   const [lists, setLists] = useState([]);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+  }, []);
 
   const fetchLists = () => {
     const listsRef = ref(database, 'lists');
@@ -32,22 +44,6 @@ function App() {
     fetchLists(); // Re-fetch lists to update UI after a new list is added
   };
 
-  // const deleteList = (listId) => {
-  //   if (window.confirm('Are you sure you want to delete this list?')) {
-  //     const listRef = ref(database, `lists/${listId}`);
-  //     const tasksRef = ref(database, `lists/${listId}/tasks`);
-  
-  //     remove(listRef)
-  //       .then(() => remove(tasksRef))
-  //       .then(() => {
-  //         setLists(lists.filter(list => list.id !== listId));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error deleting list:', error);
-  //       });
-  //   }
-  // };
-
   const onListDeleted = (listId) => {
     setLists(lists.filter(list => list.id !== listId));
   };
@@ -58,28 +54,50 @@ function App() {
 
     return <ListDetail list={list} />;
   }
-
+ // PrivateRoute component
+ function PrivateRoute({ children, ...rest }) {
   return (
+    <Route
+      {...rest}
+      render={() => (user ? children : <Navigate to="/login" replace />)}
+    />
+  );
+}
+
+return (
+  <UserContext.Provider value={user}> {/* provide user to context */}
     <div className="app">
       <div className="floatingButton">
-      <ListManager onListAdded={onListAdded} lists={lists} />
+        <ListManager onListAdded={onListAdded} lists={lists} />
       </div>
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
         <Route
           path="/"
           element={
-            <>
-              <h1>Welcome, Nad</h1>
-              <ToDoNext lists={lists} />
-              <ListsDisplay lists={lists} onDeleteList={onListDeleted} />
-            </>
+            user ? (
+              <>
+                <h1>Welcome, {user ? user.displayName : 'Guest'}</h1>
+                <ToDoNext lists={lists} />
+                <ListsDisplay lists={lists} onDeleteList={onListDeleted} />
+              </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
-        <Route path="/list/:listId" element={<ListDetailWrapper onDeleteList={onListDeleted} />} />
-        <Route path="/list/:listId/task/:taskId" element={<TaskDetail />} />
+        <Route
+          path="/list/:listId"
+          element={user ? <ListDetailWrapper onDeleteList={onListDeleted} /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/list/:listId/task/:taskId"
+          element={user ? <TaskDetail /> : <Navigate to="/login" replace />}
+        />
       </Routes>
     </div>
-  );
+  </UserContext.Provider>
+);
 }
 
 export default App;

@@ -1,15 +1,15 @@
-// Import necessary libraries and components
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // import useContext
 import { database } from './firebase-config';
 import { onValue, ref, get } from 'firebase/database';
 import { Link } from 'react-router-dom';
 import ListProgress from './ListProgress';
 import { formatDistanceToNow } from 'date-fns';
 import cardBg from './img/card-bg.svg';
-
+import UserContext from './UserContext'; // import UserContext
 
 // Define the ToDoNext component
 function ToDoNext({ lists }) {
+  const user = useContext(UserContext); // access user from context
   // Initialize state variables
   const [allTasks, setAllTasks] = useState([]);
   const [closestTasks, setClosestTasks] = useState([]);
@@ -20,7 +20,7 @@ function ToDoNext({ lists }) {
       let tasks = [];
   
       // Loop through each list
-      for (let list of lists) {
+      for (let list of lists.filter(list => list.userId === user.uid)) { // filter lists by user ID
         // Check if the list has a name
         if (list.name) {
           // Get a reference to the tasks in the current list
@@ -42,7 +42,7 @@ function ToDoNext({ lists }) {
     };
   
     fetchTasks();
-  }, [lists]);
+  }, [lists, user.uid]); // add user.uid to the dependency array
 
   // Determine the closest tasks when the allTasks state variable changes
   useEffect(() => {

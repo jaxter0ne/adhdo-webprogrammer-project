@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // import useContext
 import { Link, useNavigate } from 'react-router-dom';
 import { database } from './firebase-config';
 import { ref, update, onValue, remove } from 'firebase/database'; 
 import ListProgress from './ListProgress';
 import DeleteListButton from './DeleteListButton';
+import UserContext from './UserContext'; // import UserContext
 
 
 const ListDisplay = ({ lists, onDeleteList }) => {
+  const user = useContext(UserContext); // access user from context
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(null);
   const [editedListName, setEditedListName] = useState('');
@@ -61,7 +63,7 @@ const ListDisplay = ({ lists, onDeleteList }) => {
   <>
   <h2>My Projects</h2>
     <ul>
-      {lists.map((list) => (
+    {lists.filter(list => list.userId === user.uid).map((list) => ( // filter lists by user ID
         <li key={list.id}>
           {isEditing === list.id ? (
             <>

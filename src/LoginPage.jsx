@@ -1,18 +1,27 @@
 import React from 'react';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithRedirect, GoogleAuthProvider, getRedirectResult } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+  const navigate = useNavigate();
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     const auth = getAuth();
-    signInWithPopup(auth, provider)
+    signInWithRedirect(auth, provider);
+  };
+
+  // This will be triggered after the redirect back from the provider's sign in flow.
+  React.useEffect(() => {
+    const auth = getAuth();
+    getRedirectResult(auth)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        // ...
+        // Navigate to the home page after the user has logged in.
+        navigate('/');
       }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -23,7 +32,7 @@ function LoginPage() {
         const credential = GoogleAuthProvider.credentialFromError(error);
         // ...
       });
-  };
+  }, [navigate]);
 
   return (
     <div>
