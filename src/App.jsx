@@ -32,22 +32,6 @@ function App() {
     fetchLists(); // Re-fetch lists to update UI after a new list is added
   };
 
-  // const deleteList = (listId) => {
-  //   if (window.confirm('Are you sure you want to delete this list?')) {
-  //     const listRef = ref(database, `lists/${listId}`);
-  //     const tasksRef = ref(database, `lists/${listId}/tasks`);
-  
-  //     remove(listRef)
-  //       .then(() => remove(tasksRef))
-  //       .then(() => {
-  //         setLists(lists.filter(list => list.id !== listId));
-  //       })
-  //       .catch((error) => {
-  //         console.error('Error deleting list:', error);
-  //       });
-  //   }
-  // };
-
   const onListDeleted = (listId) => {
     setLists(lists.filter(list => list.id !== listId));
   };
