@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "dev": "REACT_APP_OPENAI_API_KEY=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 react-scripts start",
+    "dev": "react-scripts start",
     "server": "node server.js"
   },
   "devDependencies": {

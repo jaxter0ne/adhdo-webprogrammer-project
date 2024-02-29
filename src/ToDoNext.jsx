@@ -21,16 +21,19 @@ function ToDoNext({ lists }) {
   
       // Loop through each list
       for (let list of lists) {
-        // Get a reference to the tasks in the current list
-        const tasksRef = ref(database, `lists/${list.id}/tasks`);
-        // Fetch the tasks
-        const snapshot = await get(tasksRef);
-        const data = snapshot.val();
-        if (data) {
-          // Add the fetched tasks to the tasks array, filtering out tasks that are done
-          tasks = [...tasks, ...Object.keys(data)
-            .map((key) => ({ id: key, listId: list.id, listName: list.name, ...data[key] }))
-            .filter((task) => !task.done)];
+        // Check if the list has a name
+        if (list.name) {
+          // Get a reference to the tasks in the current list
+          const tasksRef = ref(database, `lists/${list.id}/tasks`);
+          // Fetch the tasks
+          const snapshot = await get(tasksRef);
+          const data = snapshot.val();
+          if (data) {
+            // Add the fetched tasks to the tasks array, filtering out tasks that are done
+            tasks = [...tasks, ...Object.keys(data)
+              .map((key) => ({ id: key, listId: list.id, listName: list.name, ...data[key] }))
+              .filter((task) => !task.done)];
+          }
         }
       }
   
@@ -55,7 +58,7 @@ function ToDoNext({ lists }) {
 
   // Render the component
   return (
-  <><h2>To do next</h2>
+  <><h3>To do next</h3>
     <div className="to-do-next">
       {/* Map over each of the closest tasks */}
       {closestTasks.map((task) => (
@@ -81,7 +84,8 @@ function ToDoNext({ lists }) {
               <div className="card-menu-title">
                 {/* Display the name of the list and the task */}
                 <div className="text-wrapper">{task.listName}</div>
-                <p className="div">{task.name.length > 25 ? task.name.substring(0, 25) + '...' : task.name}</p>              </div>
+                <p className="div">{task.name.length > 25 ? task.name.substring(0, 35) + '...' : task.name}</p>
+                </div>
               <div className="card-menu-progress">
                 <div className="para-primary-center-2">Project Progress</div>
                 {/* Display the progress of the list. If it's past deadline, style the background of the bar to be red */}

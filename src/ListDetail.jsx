@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { database } from './firebase-config';
 import { ref, onValue, push, set, update, remove } from 'firebase/database';
 import EditListName from './EditListName'; // Import the new component
-import ProgressBar from './ProgressBar'; // Import the new component
+import ListProgress from './ListProgress';
+import ToDoNext from './ToDoNext';
 
 
 function ListDetail() {
@@ -16,7 +17,8 @@ function ListDetail() {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTaskName, setEditedTaskName] = useState('');
   const [editedTaskDeadline, setEditedTaskDeadline] = useState('');
-  const [originalListName, setOriginalListName] = useState('');
+  const [lists, setLists] = useState([]);
+
 
   useEffect(() => {
     const listRef = ref(database, `lists/${listId}`);
@@ -31,6 +33,8 @@ function ListDetail() {
       const loadedTasks = [];
       for (const key in tasksData) {
         loadedTasks.push({ id: key, ...tasksData[key] });
+        const data = snapshot.val() || {};
+        setLists(Object.keys(data).map((key) => ({ id: key, ...data[key] })));
       }
       setTasks(loadedTasks);
     });
@@ -88,15 +92,22 @@ function ListDetail() {
 
   const doneTasks = tasks.filter(task => task.done).length;
   const totalTasks = tasks.length;
-  const progressPercentage = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
+  // const progressPercentage = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
 
 
   return (
     <div>
       <Link to={`/`}>{'<'} Back</Link>
-      <EditListName listName={listName} setListName={setListName} /> {/* Component to show list name and edit it when clicked */}
-      <span className='label-left'>Project Progress</span>
-      <div className='progressPadding'><ProgressBar progressPercentage={progressPercentage} /> {/* Use the ProgressBar component */}
+      <EditListName listName={listName} setListName={setListName}  /> {/* Component to show list name and edit it when clicked */}
+      <div className='titleProgress'>
+        <span className='label-left'>Project Progress</span>
+        <ListProgress listId={listId} />
+      </div>
+      <div className='progressPadding'>
+      <ToDoNext lists={[{
+        id: listId,
+        name: listName,
+      }]} /> 
       </div>
       <div className="newTask">
   <input
@@ -156,11 +167,18 @@ function ListDetail() {
                   <span onClick={() => startEditing(task)}>
                     {task.name}
                     <br />
+                    {task.duration && (
+                      <span className="subDate">
+                        Estimated duration: {Math.floor(task.duration / 3600000) > 0 ? `${Math.floor(task.duration / 3600000)} hours ` : ''}
+                        {Math.floor((task.duration % 3600000) / 60000)} minutes
+                      <br/></span>
+                    )}
                     {task.deadline && (
                       <span className="subDate">
-                       Due {new Date(task.deadline).toLocaleDateString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' })} at {new Date(task.deadline).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                      </span>
+                        Due {new Date(task.deadline).toLocaleDateString('en-GB', { year: 'numeric', month: 'numeric', day: 'numeric' })} at {new Date(task.deadline).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                         </span>
                     )}
+                    
                   </span>
                 </div>
                 <div className="task-actions">

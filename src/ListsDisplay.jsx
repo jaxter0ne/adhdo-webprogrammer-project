@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { database } from './firebase-config';
 import { ref, update, onValue, remove } from 'firebase/database'; 
-import ProgressBar from './ProgressBar';
 import ListProgress from './ListProgress';
+import DeleteListButton from './DeleteListButton';
 
 
 const ListDisplay = ({ lists, onDeleteList }) => {
@@ -11,9 +11,7 @@ const ListDisplay = ({ lists, onDeleteList }) => {
   const [isEditing, setIsEditing] = useState(null);
   const [editedListName, setEditedListName] = useState('');
   const [progressPercentages, setProgressPercentages] = useState({});
-  const deleteList = (listId) => {
-    onDeleteList(listId);
-  };
+  
 
   useEffect(() => {
     setIsLoading(true); // Set loading to true at the start of data fetch
@@ -24,6 +22,9 @@ const ListDisplay = ({ lists, onDeleteList }) => {
       onValue(tasksRef, (snapshot) => {
         const data = snapshot.val();
         const tasks = data ? Object.keys(data).map((key) => ({ id: key, ...data[key] })) : [];
+
+        if (tasks.length === 0) return;
+        
         const doneTasks = tasks.filter(task => task.done).length;
         const totalTasks = tasks.length;
         const progress = totalTasks > 0 ? (doneTasks / totalTasks) * 100 : 0;
@@ -57,6 +58,8 @@ const ListDisplay = ({ lists, onDeleteList }) => {
   }
 
   return (
+  <>
+  <h2>My Projects</h2>
     <ul>
       {lists.map((list) => (
         <li key={list.id}>
@@ -71,9 +74,9 @@ const ListDisplay = ({ lists, onDeleteList }) => {
                 />
               </div>
               <div className="task-actions">
+                <DeleteListButton listId={list.id} onListDeleted={onDeleteList} />
                 <button onClick={() => saveListName(list.id)}>Save</button>
                 <button onClick={() => setIsEditing(null)}>Cancel</button>
-                <button onClick={() => deleteList(list.id)}>Delete</button> {/* Add delete button */}
               </div>
             </>
           ) : (
@@ -81,7 +84,7 @@ const ListDisplay = ({ lists, onDeleteList }) => {
               
                 <div className="taskLabel">
                 <Link to={`/list/${list.id}`}>
-                <div>{list.name}</div>
+                <div>{list.name} {">"}</div>
                 <div className='listProgressPadding'><ListProgress listId={list.id} /></div>
                 </Link>
               </div>
@@ -90,15 +93,16 @@ const ListDisplay = ({ lists, onDeleteList }) => {
                 <button onClick={() => startEditing(list.id, list.name)}>
                   Edit
                 </button>
-                <button onClick={() => navigate(`/list/${list.id}`)}>
+                {/* <button onClick={() => navigate(`/list/${list.id}`)}>
                   {'>'}
-                </button>
+                </button> */}
               </div>
             </>
           )}
         </li>
       ))}
     </ul>
+    </>
   );
 };
 

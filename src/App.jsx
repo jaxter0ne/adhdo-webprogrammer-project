@@ -7,6 +7,8 @@ import ListDetail from './ListDetail';
 import TaskDetail from './TaskDetail';
 import ListsDisplay from './ListsDisplay';
 import './App.scss';
+import ToDoNext from './ToDoNext';
+import { deleteListButton } from './DeleteListButton';
 
 function App() {
   const [lists, setLists] = useState([]);
@@ -30,20 +32,24 @@ function App() {
     fetchLists(); // Re-fetch lists to update UI after a new list is added
   };
 
-  const deleteList = (listId) => {
-    if (window.confirm('Are you sure you want to delete this list?')) {
-      const listRef = ref(database, `lists/${listId}`);
-      const tasksRef = ref(database, `lists/${listId}/tasks`);
+  // const deleteList = (listId) => {
+  //   if (window.confirm('Are you sure you want to delete this list?')) {
+  //     const listRef = ref(database, `lists/${listId}`);
+  //     const tasksRef = ref(database, `lists/${listId}/tasks`);
   
-      remove(listRef)
-        .then(() => remove(tasksRef))
-        .then(() => {
-          setLists(lists.filter(list => list.id !== listId));
-        })
-        .catch((error) => {
-          console.error('Error deleting list:', error);
-        });
-    }
+  //     remove(listRef)
+  //       .then(() => remove(tasksRef))
+  //       .then(() => {
+  //         setLists(lists.filter(list => list.id !== listId));
+  //       })
+  //       .catch((error) => {
+  //         console.error('Error deleting list:', error);
+  //       });
+  //   }
+  // };
+
+  const onListDeleted = (listId) => {
+    setLists(lists.filter(list => list.id !== listId));
   };
 
   function ListDetailWrapper() {
@@ -55,18 +61,21 @@ function App() {
 
   return (
     <div className="app">
-      <h1>ADHDo</h1>
+      <div className="floatingButton">
+      <ListManager onListAdded={onListAdded} lists={lists} />
+      </div>
       <Routes>
         <Route
           path="/"
           element={
             <>
-              <ListManager onListAdded={onListAdded} lists={lists} />
-              <ListsDisplay lists={lists} onDeleteList={deleteList} />
+              <h1>Welcome, Nad</h1>
+              <ToDoNext lists={lists} />
+              <ListsDisplay lists={lists} onDeleteList={onListDeleted} />
             </>
           }
         />
-        <Route path="/list/:listId" element={<ListDetailWrapper />} />
+        <Route path="/list/:listId" element={<ListDetailWrapper onDeleteList={onListDeleted} />} />
         <Route path="/list/:listId/task/:taskId" element={<TaskDetail />} />
       </Routes>
     </div>
