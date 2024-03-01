@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { database } from './firebase-config';
 import { ref, onValue, remove } from 'firebase/database';
 import { Routes, Route, useParams, useNavigate, Navigate } from 'react-router-dom';
@@ -48,6 +48,18 @@ function App() {
     setLists(lists.filter(list => list.id !== listId));
   };
 
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      setUser(null);
+      navigate('/login');
+    }).catch((error) => {
+      // An error happened.
+      console.error(error);
+    });
+  };
+
   function ListDetailWrapper() {
     const { listId } = useParams();
     const list = lists.find(list => list.id === listId);
@@ -65,11 +77,13 @@ function App() {
 }
 
 return (
-  <UserContext.Provider value={user}> {/* provide user to context */}
+  <UserContext.Provider value={user}>
     <div className="app">
-      <div className="floatingButton">
-        <ListManager onListAdded={onListAdded} lists={lists} />
-      </div>
+    {user && ( // Only render ListManager if user is signed in
+        <div className="floatingButton">
+          <ListManager onListAdded={onListAdded} lists={lists} />
+        </div>
+      )}
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route
@@ -77,7 +91,8 @@ return (
           element={
             user ? (
               <>
-                <h1>Welcome, {user ? user.displayName : 'Guest'}</h1>
+                <div className="titleBar"><h1>Welcome, {user ? user.displayName : 'Guest'}</h1>
+                <button type="button" onClick={handleLogout}>Logout</button></div> {/* Logout button */}
                 <ToDoNext lists={lists} />
                 <ListsDisplay lists={lists} onDeleteList={onListDeleted} />
               </>
